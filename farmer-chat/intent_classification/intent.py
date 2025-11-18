@@ -9,7 +9,7 @@ async def classify_intent(qn):
     """
     prompt = Config.INTENT_CLASSIFICATION_PROMPT_TEMPLATE.format(input=qn)
     intent_response, ex, retries = await make_openai_request(prompt, model=Config.GPT_4_MODEL)
-    return intent_response.choices[0].message.content if intent_response else IntentConstants.USER_INTENT_FARMING
+    return intent_response.choices[0].message.content if intent_response else IntentConstants.USER_INTENT_HEALTH
 
 
 async def generate_convo_response(qn, name):
@@ -52,7 +52,7 @@ async def process_user_intent(input_msg, user_name):
     """
     Intent classification of the user query or message to recognise the intention of the user. If the user's
     query intent falls under any of the categories such as greetings, unclear queries, exiting the conversation,
-    out of context, or to get an answer / response within the context of the available content.
+    out of context, or to get an answer / response within the context of the available healthcare content.
     """
     response = None
     intent = None
@@ -70,7 +70,7 @@ async def process_user_intent(input_msg, user_name):
     if intent == IntentConstants.USER_INTENT_OUT_CONTEXT:
         response = await generate_out_of_context_response(input_msg, user_name)
 
-    if intent != IntentConstants.USER_INTENT_FARMING and intent != IntentConstants.USER_INTENT_REFERRING_BACK:
+    if intent != IntentConstants.USER_INTENT_HEALTH and intent != IntentConstants.USER_INTENT_REFERRING_BACK:
         proceed_to_rag = False
 
     return response, intent, proceed_to_rag

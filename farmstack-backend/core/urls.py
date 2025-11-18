@@ -74,3 +74,9 @@ if settings.DEBUG:
         path("__debug__/", include("debug_toolbar.urls")),
     ]
     
+
+# Servvia URLs
+from django.urls import path, include
+urlpatterns += [
+    path('api/servvia/', include('servvia.urls')),
+]

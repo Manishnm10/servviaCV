@@ -4,16 +4,22 @@ import asyncio
 from django_core.config import Config
 from rag_service.openai_service import make_openai_request
 
+# Prefer Servvia healthcare prompt; fall back to env prompt if not available
+try:
+    from django_core.servvia_prompts import RESPONSE_GEN_PROMPT as SERVVIA_RESPONSE_PROMPT
+except Exception:
+    SERVVIA_RESPONSE_PROMPT = None
+
 
 async def setup_prompt(user_name, context_chunks, rephrased_query, system_prompt=Config.RESPONSE_GEN_PROMPT):
     """
     Setup generation response prompt for a rephrased user query with retrieved chunks.
+    Prefer Servvia's healthcare prompt if available.
     """
     prompt_name_1 = user_name if user_name else "a person"
-    prompt_name_2 = user_name if user_name else "the person"
-    response_prompt = system_prompt.format(
+    prompt_template = SERVVIA_RESPONSE_PROMPT or system_prompt
+    response_prompt = prompt_template.format(
         name_1=prompt_name_1,
-        # name_2=prompt_name_2,
         context=context_chunks,
         input=rephrased_query,
     )
@@ -54,17 +60,17 @@ async def generate_query_response(original_query, user_name, context_chunks, rep
 
     response_prompt = await setup_prompt(user_name, context_chunks, rephrased_query)
 
-    # print(f"\n ######## FINAL PROMPT BEGINS ########\n{response_prompt} ######## FINAL PROMPT END ########\n")
-    # logger.info(f"\n ######## FINAL PROMPT BEGINS ########\n{response_prompt} ######## FINAL PROMPT END ########\n")
     response_gen_start = datetime.datetime.now()
     generated_response, response_gen_exception, response_gen_retries = await make_openai_request(response_prompt)
     response_gen_end = datetime.datetime.now()
 
     if generated_response:
         llm_response = generated_response.choices[0].message.content
-        generation_completion_tokens = generated_response.usage.completion_tokens
-        generation_prompt_tokens = generated_response.usage.prompt_tokens
-        generation_total_tokens = generated_response.usage.total_tokens
+        usage = getattr(generated_response, "usage", None)
+        if usage:
+            generation_completion_tokens = getattr(usage, "completion_tokens", 0)
+            generation_prompt_tokens = getattr(usage, "prompt_tokens", 0)
+            generation_total_tokens = getattr(usage, "total_tokens", 0)
 
     response_map.update(
         {

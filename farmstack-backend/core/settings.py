@@ -466,3 +466,5 @@ CELERY_BEAT_SCHEDULE = {
         #  'schedule': crontab(minute='*/1')
     },
 }
+# Servvia App
+INSTALLED_APPS += ['servvia']

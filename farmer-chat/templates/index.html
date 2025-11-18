@@ -6,33 +6,33 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta
       name="description"
-      content="MediCare Assistant - Your AI-powered guide to home remedies and natural health solutions. Get helpful information about traditional treatments and wellness advice."
+      content="Join our Dark Theme Chat App, a modern and responsive messaging platform that mimics a chatbot-like interaction. Engage in conversations with a smart AI, and enjoy a sleek, user-friendly design optimized for all devices."
     />
     <meta
       name="keywords"
-      content="Home Remedies, Natural Health, AI Health Assistant, Traditional Medicine, Wellness, Health Chatbot"
+      content="Dark Theme Chat App, Responsive Chat Application, Modern Messaging Platform, AI Chatbot, User-Friendly Chat Interface"
     />
-    <meta name="author" content="MediCare Assistant" />
-    <meta property="og:title" content="MediCare Assistant - Home Remedies AI" />
+    <meta name="author" content="YourName or YourCompanyName" />
+    <meta property="og:title" content="Dark Theme Chat App" />
     <meta
       property="og:description"
-      content="Get expert advice on home remedies and natural health solutions from our AI-powered assistant."
+      content="Experience a modern and responsive chatbot interface, designed to provide seamless interaction with AI in a user-friendly dark theme environment."
     />
     <meta
       property="og:image"
-      content="URL_to_medicare_logo_image"
+      content="URL_to_an_image_that_represents_the_app"
     />
     <meta property="og:url" content="URL_of_your_website" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="MediCare Assistant" />
+    <meta name="twitter:title" content="Dark Theme Chat App" />
     <meta
       name="twitter:description"
-      content="Your trusted AI guide for home remedies and natural health solutions."
+      content="Join our chat app to engage with a smart AI in a sleek, responsive environment designed for modern users."
     />
     <meta
       name="twitter:image"
-      content="URL_to_medicare_logo_image"
+      content="URL_to_an_image_that_represents_the_app"
     />
     <link
       rel="icon"
@@ -76,7 +76,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
 
-    <title>MediCare Assistant - Home Remedies</title>
+    <title>Farmer Chat App</title>
     <link href="https://cdn.tailwindcss.com" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -89,9 +89,11 @@
       #chat {
         background-color: #2d3748;
         border-radius: 8px;
+        /* max-width: 70%; */
       }
       .message {
         display: flex;
+        /* margin: 8px; */
         padding: 10px;
         border-radius: 12px;
         color: white;
@@ -104,6 +106,7 @@
       }
       .bot {
         background-color: #4a5568;
+
         text-align: left;
       }
 
@@ -121,15 +124,15 @@
       }
 
       .prose p {
-        color: white;
-        font-size: 16px;
+        color: white; /* Dark grey text color */
+        font-size: 16px; /* Adjust the font size */
       }
 
       .prose a,
       .prose li,
       .prose,
       .prose strong {
-        color: white;
+        color: white; /* Custom color for links */
       }
 
       .disabled {
@@ -148,6 +151,7 @@
       }
       #langauge_selection_box select {
         height: 40px;
+        /* background-color: rgba(128, 128, 128, 0.687); */
         color: black;
       }
       #languageDropdown {
@@ -155,6 +159,7 @@
       }
       #langauge_selection_box input {
         color: black !important;
+        /* margin-bottom: 1; */
       }
       #emailInput,
       #languageDropdown {
@@ -166,17 +171,17 @@
       }
 
       .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+        -ms-overflow-style: none; /* Internet Explorer 10+ */
+        scrollbar-width: none; /* Firefox */
       }
 
       .no-scrollbar::-webkit-scrollbar {
-        display: none;
+        display: none; /* Safari and Chrome */
       }
       .warning-message {
         padding: 5px;
-        background-color: #ffcccb;
-        color: #d8000c;
+        background-color: #ffcccb; /* Light red background */
+        color: #d8000c; /* Dark red text */
         border: 1px solid #d8000c;
         border-radius: 5px;
         margin: 2px 0;
@@ -189,7 +194,7 @@
     <div class="flex flex-col w-64 h-screen px-4 py-8 bg-[#2d3748] shadow-md">
       <div class="flex flex-col items-center mt-4 -mx-4">
         <a href="">
-          <h2 class="mx-auto font-bold text-xl text-white">🏥 MediCare Assistant</h2>
+          <h2 class="mx-auto font-bold text-xl text-white">FarmerChat</h2>
         </a>
         <div id="langauge_selection_box">
           <input type="email" id="emailInput" placeholder="Enter your email" />
@@ -227,21 +232,28 @@
           id="welcomeMessage"
           class="absolute inset-0 h-96 w-96 top-36 left-72 flex flex-col items-center justify-center text-center p-4 bg-opacity-90 transition-opacity duration-500"
         >
-          <div class="text-6xl mb-4">🏥💊🌿</div>
+          <img
+            src="https://farmerchat.vercel.app/primary-logo.svg"
+            alt="Farmer Chat Logo"
+            class="mb-4 w-60"
+          />
+          <!-- Adjust the path and size as needed -->
           <h1 class="text-2xl font-bold text-white mb-2">
-            Welcome to MediCare Assistant
+            Welcome to Farmer Chat
           </h1>
-          <p class="text-white mb-4">
-            Your AI guide to home remedies and natural health. Ask about traditional treatments and wellness advice.
-          </p>
-          <p class="text-yellow-300 text-sm">
-            ⚠️ For educational purposes only. Consult healthcare professionals for medical advice.
+          <p class="text-white">
+            We're here to help you with your agricultural queries. Please type
+            your message below to start chatting.
           </p>
         </div>
 
         <!-- Messages will be displayed here -->
       </div>
 
+      <!-- <hr /> -->
+      <!-- <div id="responseLoadingIcon" class="hidden">
+        <i class="fas fa-spinner fa-spin"></i> Loading...
+      </div> -->
       <div class="flex">
         <button
           id="recordButton"
@@ -262,7 +274,7 @@
           id="userInput"
           type="text"
           class="form-input px-4 py-2 w-full rounded-l bg-gray-700 border-none"
-          placeholder="Ask about home remedies..."
+          placeholder="Type your message..."
           onkeypress="handleKeyPress(event)"
         />
         <button
@@ -280,7 +292,7 @@
     <script>
       let counter = 0;
       let userMailId = localStorage.getItem("userEmail");
-      let baseUrl = "http://127.0.0.1:8000";
+      let baseUrl = "https://farmerchat.farmstack.co/opensource-be";
       function showAlertMessage(message) {
         alert(message);
       }
@@ -288,7 +300,8 @@
       function saveEmail() {
         const email = document.getElementById("emailInput").value;
         if (email) {
-          localStorage.setItem("userEmail", email);
+          // Check if the email input is not empty
+          localStorage.setItem("userEmail", email); // Save the email in local storage
           loadEmail();
           fetchSupportedLanguages(true);
         } else {
@@ -300,12 +313,15 @@
         const storedEmail = localStorage.getItem("userEmail");
         if (storedEmail) {
           document.getElementById("emailInput").value = storedEmail;
-          document.getElementById("sendButton").disabled = false;
+          document.getElementById("sendButton").disabled = false; // Enable the button if email is stored
+          // document.getElementById("sendButton").classList.remove("disabled"); // Add disabled style
         } else {
-          document.getElementById("sendButton").disabled = false;
+          document.getElementById("sendButton").disabled = false; // Disable the button if no email is stored
+          // document.getElementById("sendButton").classList.add("disabled"); // Add disabled style
         }
       }
 
+      // Call loadEmail on page load to set the email input value from local storage
       window.onload = loadEmail;
 
       function processApiResponse(data) {
@@ -314,15 +330,19 @@
         let responseHtml = renderMarkdown(responseText);
         responseHtml = `<div class="prose min-w-full">${responseHtml}</div>`;
         if (data.source) {
-          let sourceHtml = data.source;
+          // Directly use the source URL
+          let sourceHtml = data.source; // URL of the source
 
+          // Check if the URL starts with "https://"
           if (!sourceHtml.startsWith("https://")) {
             if (sourceHtml.startsWith("/")) {
               sourceHtml = "https://datahubtest.farmstack.co" + sourceHtml;
             } else {
               sourceHtml = "https://datahubtest.farmstack.co/" + sourceHtml;
             }
+            // If it does not start with "https://", prepend the base URL
           }
+          // Append a new div to responseHtml containing only the source link
           responseHtml += `<div class="mt-4 flex justify-end">
                         <a href="${sourceHtml}" target="_blank" class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
                             <span>Source</span>
@@ -331,6 +351,7 @@
                      </div>`;
         }
 
+        // Handle follow-up questions
         if (data.follow_up_questions && data.follow_up_questions.length > 0) {
           responseHtml += `<div class="mb-2 font-bold">Follow-up Questions:</div><ul class="list-disc pl-5 space-y-2">`;
           data.follow_up_questions.forEach((question) => {
@@ -348,6 +369,7 @@
           responseHtml += `</ul>`;
         }
 
+        // Add a play button for audio if message_id is available
         if (!data.error) {
           responseHtml += `<div class="mt-4 flex items-center">
                           <button class="playAudioButton bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
@@ -362,39 +384,46 @@
         addToChatWindow("bot", responseHtml);
       }
 
+      // Function to toggle audio playback
       function toggleAudio(button) {
         const audio = button.nextElementSibling;
         if (audio.paused) {
           audio.play();
-          button.innerHTML = '<i class="fas fa-pause"></i> Pause Audio';
+          button.innerHTML = '<i class="fas fa-pause"></i> Pause Audio'; // Change button to show pause icon
         } else {
           audio.pause();
-          button.innerHTML = '<i class="fas fa-play"></i> Play Audio';
+          button.innerHTML = '<i class="fas fa-play"></i> Play Audio'; // Change button to show play icon
         }
       }
 
+      //401 handled
       function sendMessage() {
         var welcomeMessage = document.getElementById("welcomeMessage");
         if (welcomeMessage) {
-          welcomeMessage.style.opacity = "0";
+          welcomeMessage.style.opacity = "0"; // Start the fade-out
           setTimeout(function () {
-            welcomeMessage.style.display = "none";
-          }, 500);
+            welcomeMessage.style.display = "none"; // Completely hide after transition
+          }, 500); // Corresponds with the duration-500 in TailwindCSS
         }
 
         var input = document.getElementById("userInput");
         var message = input.value.trim();
         var loadingIcon = document.getElementById("loadingIcon");
+        // var responseLoadingIcon = document.getElementById(
+        //   "responseLoadingIcon"
+        // ); // Get the response loading indicator
         if (message === "") return;
 
+        // Show loading icon
         loadingIcon.classList.remove("hidden");
+        // responseLoadingIcon.classList.remove("hidden");
         input.value = "";
         addToChatWindow("user", message);
         addToChatWindow(
           "bot",
           "<i class='fas fa-spinner fa-spin'></i> Loading...",
           true
-        );
+        ); // Add temporary loading message
         let userMailId = localStorage.getItem("userEmail");
 
         fetch(`${baseUrl}/api/chat/get_answer_for_text_query/`, {
@@ -409,10 +438,12 @@
         })
           .then((response) => {
             if (!response.ok && response.status === 401) {
+              // Handle 401 Unauthorized specifically
               response.json().then((data) => {
+                // showAlertMessage(data.message);
                 processApiResponse({
                   message: "Sucessful retrieval of answer for the above query.",
-                  query: message,
+                  query: "Tell me about Wheat Varieties for Low Water",
                   error: true,
                   data: [],
                   response: data.message,
@@ -420,22 +451,24 @@
                   response_audio: null,
                 });
               });
+              // throw new Error("Unauthorized");
             }
             return response.json();
           })
           .then((data) => {
             var loadingMessage = document.getElementById("loadingMessage");
             if (loadingMessage) {
-              loadingMessage.remove();
+              loadingMessage.remove(); // Remove the loading message from the chat
             }
 
             loadingIcon.classList.add("hidden");
+            // responseLoadingIcon.classList.add("hidden");
             if (!data.error) {
               processApiResponse(data);
             } else {
               processApiResponse({
                 message: "Sucessful retrieval of answer for the above query.",
-                query: message,
+                query: "Tell me about Wheat Varieties for Low Water",
                 error: true,
                 data: [],
                 response: data.message ?? "Something went wrong...",
@@ -443,30 +476,35 @@
                 response_audio: null,
                 source: null,
               });
+              // addToChatWindow("bot", "Failed to get response from API.");
             }
           })
           .catch((error) => {
             console.log("🚀 ~ sendMessage ~ error:", error);
             var loadingMessage = document.getElementById("loadingMessage");
             if (loadingMessage) {
-              loadingMessage.remove();
+              loadingMessage.remove(); // Remove the loading message from the chat
             }
             loadingIcon.classList.add("hidden");
+            // responseLoadingIcon.classList.add("hidden");
             console.error("Error:", error);
 
             processApiResponse({
               message: "Sucessful retrieval of answer for the above query.",
-              query: message,
+              query: "Tell me about Wheat Varieties for Low Water",
               error: true,
               data: [],
               response: error ?? "Something went wrong...",
               follow_up_questions: [],
               response_audio: null,
             });
+
+            // addToChatWindow("bot", "An error occurred while fetching data.");
           });
       }
 
       function askFollowUpQuestion(question) {
+        // Set the input field with the question and send the message
         document.getElementById("userInput").value = question;
         sendMessage();
       }
@@ -475,60 +513,61 @@
         var chatWindow = document.getElementById("chat");
         var messageElement = document.createElement("div");
         var avatarImage = document.createElement("img");
-        avatarImage.style.width = "40px";
+        avatarImage.style.width = "40px"; // Set avatar size
         avatarImage.style.height = "40px";
-        avatarImage.style.borderRadius = "50%";
-        avatarImage.style.marginRight = "10px";
-        avatarImage.style.background = "white";
-        avatarImage.style.padding = "5px";
+        avatarImage.style.borderRadius = "50%"; // Make the image round
+        avatarImage.style.marginRight = "10px"; // Add some spacing
+        avatarImage.style.background = "white"; // Add some spacing
+        avatarImage.style.padding = "5px"; // Add some spacing
 
         if (sender === "user") {
           avatarImage.src =
-            "https://via.placeholder.com/150/cccccc/969696.png?text=User";
+            "https://via.placeholder.com/150/cccccc/969696.png?text=User"; // Green placeholder for user
           messageElement.className = "message user";
         } else {
-          avatarImage.src = "https://via.placeholder.com/150/4CAF50/ffffff.png?text=AI";
+          avatarImage.src = "	https://farmerchat.vercel.app/secondary-logo.svg"; // Blue placeholder for bot
           messageElement.className = "message bot";
         }
 
         var messageContent = document.createElement("div");
         messageContent.innerHTML = htmlContent;
 
-        messageElement.appendChild(avatarImage);
-        messageElement.appendChild(messageContent);
+        messageElement.appendChild(avatarImage); // Append the avatar image first
+        messageElement.appendChild(messageContent); // Then append the message content
 
         chatWindow.appendChild(messageElement);
 
         if (isTemporary) {
-          messageElement.id = "loadingMessage";
+          messageElement.id = "loadingMessage"; // Assign an ID to the temporary loading message
         }
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+        chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
       }
 
       function handleKeyPress(event) {
         if (event.key === "Enter") {
-          event.preventDefault();
+          event.preventDefault(); // Prevent the default action to stop form submission
           sendMessage();
         }
       }
-      let currentAudio = null;
+      let currentAudio = null; // Holds the current playing audio element
 
       function fetchAndPlayAudio(message_id, responseText) {
         console.log("🚀 ~ fetchAndPlayAudio ~ message_id:", message_id);
         let playButton = document.querySelector(
           `button[data-message-id="${message_id}"]`
         );
-        if (!playButton) return;
+        if (!playButton) return; // Early exit if button is not found
 
         if (currentAudio && !currentAudio.paused) {
+          // If there is already playing audio, stop it
           currentAudio.pause();
-          currentAudio.currentTime = 0;
-          playButton.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+          currentAudio.currentTime = 0; // Rewind the audio
+          playButton.innerHTML = '<i class="fa-solid fa-volume-high"></i>'; // Show play icon
           return;
         }
 
-        playButton.disabled = true;
-        playButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        playButton.disabled = true; // Disable button to prevent multiple clicks
+        playButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; // Show loading spinner
         let userMailId = localStorage.getItem("userEmail");
 
         fetch(`${baseUrl}/api/chat/synthesise_audio/`, {
@@ -544,6 +583,7 @@
         })
           .then((response) => {
             if (!response.ok && response.status === 401) {
+              // Handle 401 Unauthorized specifically
               response.json().then((data) => {
                 showAlertMessage(data.message);
               });
@@ -558,10 +598,10 @@
               }
               currentAudio = new Audio(`data:audio/ogg;base64,${data.audio}`);
               currentAudio.play();
-              playButton.innerHTML = '<i class="fa-solid fa-stop"></i>';
+              playButton.innerHTML = '<i class="fa-solid fa-stop"></i>'; // Show stop icon
               currentAudio.addEventListener("ended", () => {
                 playButton.innerHTML =
-                  '<i class="fa-solid fa-volume-high"></i>';
+                  '<i class="fa-solid fa-volume-high"></i>'; // Reset to play icon when audio ends
               });
             } else {
               playButton.innerHTML = "Failed to load audio";
@@ -583,6 +623,7 @@
       document
         .getElementById("chat")
         .addEventListener("click", function (event) {
+          // Use .closest() to find the nearest ancestor which is a button with class 'playAudioButton'
           const playButton = event.target.closest("button.playAudioButton");
 
           if (playButton) {
@@ -602,9 +643,9 @@
           "Here are the follow-up questions you can ask:"
         );
         if (startIndex !== -1) {
-          return text.substring(0, startIndex);
+          return text.substring(0, startIndex); // Returns the string up to the start of the unwanted section
         }
-        return text;
+        return text; // Returns the original text if the specific phrase isn't found
       }
 
       let mediaRecorder;
@@ -614,11 +655,13 @@
         const recordingIcon = document.getElementById("recordingIcon");
 
         if (button.dataset.recording === "true") {
+          // Stop recording
           mediaRecorder.stop();
           button.dataset.recording = "false";
           recordingIcon.classList.add("hidden");
           mainMic.classList.remove("hidden");
         } else {
+          // Start recording
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             alert("Recording is not supported in this browser.");
             return;
@@ -651,7 +694,7 @@
         reader.readAsDataURL(audioBlob);
         reader.onloadend = function () {
           const base64data = reader.result;
-          const base64AudioMessage = base64data.split(",")[1];
+          const base64AudioMessage = base64data.split(",")[1]; // Remove the header part from the Base64 string
           sendAudioToServer(base64AudioMessage);
         };
       }
@@ -661,6 +704,7 @@
         var mainMic = document.getElementById("main-mic");
         if (!audioBase64) return;
 
+        // Show loading icon
         loadingIconAudio.classList.remove("hidden");
         mainMic.classList.add("hidden");
         let userMailId = localStorage.getItem("userEmail");
@@ -681,6 +725,7 @@
         })
           .then((response) => {
             if (!response.ok && response.status === 401) {
+              // Handle 401 Unauthorized specifically
               response.json().then((data) => {
                 showAlertMessage(data.message);
               });
@@ -690,6 +735,7 @@
           })
           .then((data) => {
             console.log("Success:", data);
+            // Handle success response
             loadingIconAudio.classList.add("hidden");
             mainMic.classList.remove("hidden");
             if (data?.confidence_score > 0.7) {
@@ -700,20 +746,22 @@
             console.error("Error:", error);
             loadingIconAudio.classList.add("hidden");
             mainMic.classList.remove("hidden");
+            // Handle errors
             document.getElementById("userInput").value = "";
           });
       }
 
       function showWarning() {
         const warningBox = document.getElementById("language_selection_box");
-        warningBox.classList.remove("hidden");
+        warningBox.classList.remove("hidden"); // Remove 'hidden' to show the element
       }
 
       function hideWarning() {
         const warningBox = document.getElementById("language_selection_box");
-        warningBox.classList.add("hidden");
+        warningBox.classList.add("hidden"); // Add 'hidden' to hide the element
       }
 
+      // Function to fetch supported languages and populate the dropdown
       function fetchSupportedLanguages(status) {
         let userMailId = localStorage.getItem("userEmail");
         if (!userMailId) {
@@ -733,6 +781,7 @@
               );
               showWarning();
 
+              // Handle 401 Unauthorized specifically
               response.json().then((data) => {
                 showAlertMessage(data.message);
               });
@@ -745,6 +794,7 @@
             if (status == true) alert("Email saved!");
             if (!data.error) {
               const dropdown = document.getElementById("languageDropdown");
+              // Clear the dropdown
               dropdown.innerHTML = "";
               localStorage.setItem(
                 "language",
@@ -764,11 +814,14 @@
           .catch((error) => console.error("Error:", error));
       }
 
+      // Function to set user preferred language
       function setUserLanguage() {
         const dropdown = document.getElementById("languageDropdown");
         console.log("🚀 ~ setUserLanguage ~ dropdown:", dropdown);
+        // Get the currently selected option
         const selectedOption = dropdown.options[dropdown.selectedIndex];
 
+        // Retrieve the data-bcp-code from the selected option
         const bcpCode = selectedOption.dataset.bcpCode;
         console.log("🚀 ~ setUserLanguage ~ bcpCode:", bcpCode);
         localStorage.setItem("language", bcpCode);
@@ -787,6 +840,7 @@
         })
           .then((response) => {
             if (!response.ok && response.status === 401) {
+              // Handle 401 Unauthorized specifically
               response.json().then((data) => {
                 showAlertMessage(data.message);
               });
@@ -803,9 +857,11 @@
           })
           .catch((error) => {
             console.error("Error:", error);
+            // alert("An error occurred while setting the language");
           });
       }
 
+      // Initial fetch of supported languages
       document.addEventListener("DOMContentLoaded", fetchSupportedLanguages);
     </script>
   </body>
