@@ -69,3 +69,6 @@ class Config:
 
     # Translation
     GOOGLE_APPLICATION_CREDENTIALS = ENV_CONFIG.get("GOOGLE_APPLICATION_CREDENTIALS")
+
+    # Gemini API for skin disease detection
+    GOOGLE_API_KEY = ENV_CONFIG.get("GOOGLE_API_KEY")

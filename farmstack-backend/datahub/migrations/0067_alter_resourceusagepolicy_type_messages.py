@@ -70,10 +70,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "retrieved_chunks",
-                    models.ManyToManyField(to="datahub.langchainpgembedding"),
-                ),
-                (
                     "user_map",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,

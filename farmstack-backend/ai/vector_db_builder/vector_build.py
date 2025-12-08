@@ -8,7 +8,7 @@ import numpy as np
 import requests
 from bs4 import BeautifulSoup
 from django.db import transaction
-from langchain.document_loaders import JSONLoader, PyMuPDFLoader
+from langchain_community.document_loaders import JSONLoader, PyMuPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from sklearn.metrics.pairwise import cosine_similarity
 from unstructured.partition.pdf import partition_pdf

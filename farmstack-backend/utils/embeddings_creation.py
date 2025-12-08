@@ -30,21 +30,20 @@ from dotenv import load_dotenv
 
 # from langchain import PromptTemplate
 # from langchain.docstore.document import Document
-from langchain.document_loaders import (
+from langchain_community.document_loaders import (
     BSHTMLLoader,
     CSVLoader,
     JSONLoader,
     PyMuPDFLoader,
     UnstructuredHTMLLoader,
 )
-
 # from langchain.document_loaders import TextLoader
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain.text_splitter import (
     CharacterTextSplitter,
     RecursiveCharacterTextSplitter,
 )
-from langchain.vectorstores.pgvector import DistanceStrategy
+from langchain_community.vectorstores. pgvector import DistanceStrategy
 from pgvector.django import CosineDistance, L2Distance
 from psycopg.conninfo import make_conninfo
 from reportlab.lib import colors

@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "api",
+    "skin_analysis",
+    "lab_report",
     "corsheaders",
     "rest_framework",  # ensure DRF templates & browsable API work
     "user_profile",
@@ -102,3 +105,13 @@ REST_FRAMEWORK = {
 }
 
 configure_logging()
+
+# Media files configuration 
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# File upload settings
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
