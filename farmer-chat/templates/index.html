@@ -767,8 +767,8 @@
           />
     
           <!-- Mic icon on the right -->
-          <button class="icon-btn mic-btn" onclick="toggleVoiceInput()" title="Voice input">
-            <i class="fas fa-microphone"></i>
+          <button id="recordButton" class="icon-btn mic-btn" onclick="toggleVoiceInput()" title="Voice input">
+              <i id="micIcon" class="fas fa-microphone"></i>
           </button>
     
           <!-- Send button (shows when typing) -->
@@ -1061,13 +1061,451 @@
         const menu = document.getElementById('optionsMenu');
         menu.classList.toggle('hidden');
       }
-
       
-      // Voice input toggle (placeholder - you can implement actual voice recording)
-      function toggleVoiceInput() {
-        alert('Voice input feature coming soon!  🎤');
-        // TODO: Implement voice recording functionality
+      document.addEventListener('click', function(event) {
+          const menu = document.getElementById('optionsMenu');
+          const plusButton = document.querySelector('.plus-btn');
+    
+          // Check if menu is open
+          if (! menu.classList.contains('hidden')) {
+              // Check if click is outside menu AND not on the plus button
+              const isClickInsideMenu = menu.contains(event.target);
+              const isClickOnPlusButton = plusButton.contains(event.target);
+        
+              if (!isClickInsideMenu && ! isClickOnPlusButton) {
+                  // Close the menu
+                  menu.classList.add('hidden');
+                  console.log('📍 Menu closed by clicking outside');
+              }
+          }
+      });
+
+      // ✅ Prevent menu from closing when clicking inside it
+      document.getElementById('optionsMenu').addEventListener('click', function(event) {
+          event.stopPropagation();
+      });
+
+      // ==========================================
+      // VOICE INPUT with LIVE TRANSCRIPTION IN INPUT BAR
+      // ==========================================
+
+      let mediaRecorder = null;
+      let audioChunks = [];
+      let isRecording = false;
+      let silenceDetectionTimer = null;
+      let audioContext = null;
+      let analyser = null;
+      let silenceThreshold = -45; // dB threshold for silence
+      let silenceDuration = 1000; // Stop after 1 second of silence
+      let recognition=null;
+      let liveTranscriptText='';
+
+      async function toggleVoiceInput() {
+          const micButton = document.querySelector('.mic-btn');
+          const micIcon = micButton.querySelector('i');
+          const userInput=document.getElementById('userInput');
+
+          if (!isRecording) {
+              // Start recording
+              try {
+                  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            
+                  // Setup audio context for silence detection
+                  audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                  analyser = audioContext.createAnalyser();
+                  const source = audioContext.createMediaStreamSource(stream);
+                  source.connect(analyser);
+                  analyser.fftSize = 2048;
+            
+                  mediaRecorder = new MediaRecorder(stream);
+                  audioChunks = [];
+            
+                  mediaRecorder.ondataavailable = (event) => {
+                      audioChunks.push(event.data);
+                  };
+            
+                  mediaRecorder.onstop = async () => {
+                      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                      
+                      // Stop all tracks and cleanup
+                      if (recognition) {
+                          recognition.stop();
+                          recognition = null;
+                      }
+
+                      // Keep the final live transcript in the input
+                      await transcribeAudio(audioBlob);
+
+                      
+                      // Stop all tracks and cleanup
+                      stream.getTracks().forEach(track => track.stop());
+                      if (audioContext) {
+                          audioContext.close();
+                          audioContext = null;
+                      }
+                  };
+            
+                  mediaRecorder.start();
+                  isRecording = true;
+                  liveTranscriptText='';
+
+                  // Update UI
+                  micButton.classList.add('recording');
+                  micButton.style.background = '#ff4444';
+                  micIcon. classList.remove('fa-microphone');
+                  micIcon.classList.add('fa-stop');
+                  micButton. title = '🎤 Recording...';
+
+                  // Update input placeholder
+                  userInput.placeholder = '🎤 Listening...';
+                  userInput.value = '';
+            
+                  console.log('🎤 Recording started...');
+            
+                  //Start live transcription
+                  startLiveTranscription();
+
+                  // Start silence detection
+                  detectSilence();
+            
+              } catch (error) {
+                  console.error('Microphone access error:', error);
+                  alert('Could not access microphone. Please allow microphone permissions.');
+              }
+          } else {
+              // Manual stop
+              stopRecording();
+          }
       }
+
+      function startLiveTranscription() {
+          const userInput=document.getElementById('userInput');
+
+          // Use Web Speech API for live transcription
+          if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+              const SpeechRecognition = window. SpeechRecognition || window.webkitSpeechRecognition;
+              recognition = new SpeechRecognition();
+        
+              recognition.continuous = true;
+              recognition.interimResults = true;
+              recognition.maxAlternatives=5;
+
+              recognition.lang = 'en-US';
+
+              recognition.onstart = () => {
+                  console.log('🎤 Live transcription started with enhanced settings');
+              };
+
+              recognition.onresult = (event) => {
+                  let interimTranscript = '';
+                  let finalTranscript = '';
+            
+                  for (let i = event.resultIndex; i < event. results.length; i++) {
+                      const result = event.results[i];
+                
+                      // Log alternatives for debugging
+                      if (result. length > 1) {
+                          console.log('Alternatives:', Array.from(result).map(alt => alt.transcript));
+                      }
+
+                      const transcript = event.results[i][0].transcript;
+                      if (event.results[i].isFinal) {
+                          finalTranscript += transcript + ' ';
+                          console.log('Final: "${transcript}" {confidence: ${result[0].confidence})');
+                      } else {
+                          interimTranscript += transcript;
+                      }
+                  }
+            
+                  // Update live transcript
+                  liveTranscriptText = finalTranscript;
+        
+                  // Show in input bar
+                  if (userInput) {
+                      const displayText = (finalTranscript + interimTranscript).trim();
+                      if (displayText) {
+                          userInput.value = displayText;
+                          userInput.style.color = interimTranscript ? 'rgba(255,255,255,0.6)' : '#ffffff';
+                      }
+                  }
+              };
+        
+              recognition.onerror = (event) => {
+                  console.error('Live transcription error:', event.error);
+            
+                  if (event.error === 'no-speech') {
+                      console.log('No speech detected - trying again...');
+                      // Auto-restart on no-speech
+                      if (isRecording) {
+                          try {
+                              recognition.start();
+                          } catch (e) {
+                              console.log('Could not restart recognition');
+                          }
+                      }
+                  } else if (event.error === 'audio-capture') {
+                      console. log('Microphone issue detected');
+                  }
+              };
+        
+              recognition.onend = () => {
+                  const userInput = document.getElementById('userInput');
+                  if (userInput) {
+                  
+                      // Reset text color when recognition ends
+                      userInput.style.color = '#ffffff';
+                  }
+
+                  if (isRecording) {
+                      try {
+                          recognition.start();
+                          console.log('🔄 Restarted live transcription');
+                    } catch (e) {
+                        console. log('Recognition ended normally');
+                    }
+                }
+            };
+    
+            try {
+                recognition.start();
+                console.log('🎤 Live transcription started');
+            } catch (e) {
+                console. log('Could not start live transcription:', e);
+            }          
+        } else {
+            console.log('Live transcription not supported in this browser');
+        }
+    }
+
+
+      function detectSilence() {
+          if (!isRecording || !analyser) return;
+    
+          const bufferLength = analyser.frequencyBinCount;
+          const dataArray = new Uint8Array(bufferLength);
+          analyser.getByteFrequencyData(dataArray);
+    
+          // Calculate average volume
+          let sum = 0;
+          for (let i = 0; i < bufferLength; i++) {
+              sum += dataArray[i];
+          }
+          const average = sum / bufferLength;
+    
+          // Convert to dB
+          const volume = 20 * Math.log10(average / 255);
+    
+          // Check if speaking or silent
+          if (volume > silenceThreshold) {
+              // Speaking detected - reset timer
+              if (silenceDetectionTimer) {
+                  clearTimeout(silenceDetectionTimer);
+                  silenceDetectionTimer = null;
+              }
+          } else {
+              // Silence detected
+              if (!silenceDetectionTimer) {
+                  silenceDetectionTimer = setTimeout(() => {
+                      console.log('⏹️ Auto-stopping due to silence');
+                      stopRecording();
+                  }, silenceDuration);
+              }
+          }
+    
+          // Continue monitoring
+          if (isRecording) {
+              requestAnimationFrame(detectSilence);
+          }
+      }
+
+      function stopRecording() {
+          if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+              mediaRecorder.stop();
+              isRecording = false;
+        
+              // Clear silence timer
+              if (silenceDetectionTimer) {
+                  clearTimeout(silenceDetectionTimer);
+                  silenceDetectionTimer = null;
+              }
+        
+              // Update UI
+              const micButton = document.querySelector('.mic-btn');
+              const micIcon = micButton.querySelector('i');
+              const userInput = document.getElementById('userInput');
+        
+              micButton.classList.remove('recording');
+              micButton.style.background = '';
+              micIcon.classList.remove('fa-stop');
+              micIcon.classList.add('fa-microphone');
+              micButton.title = 'Click to speak';
+
+              // Reset input placeholder and color
+              userInput.placeholder = 'Ask about symptoms, remedies, or health concerns...';
+              userInput.style.color = '#ffffff';
+        
+              console.log('🎤 Recording stopped');
+          }
+      }
+
+      async function transcribeAudio(audioBlob) {
+          const userInput = document.getElementById('userInput');
+
+          try {
+              console.log('📤 Sending audio to ServVia AI...');
+        
+              // Show processing state in input
+              userInput.value = '🔄 Processing...';
+              userInput.style.color = 'rgba(255,255,255,0.6)';
+
+        
+              // Convert audio blob to base64
+              const reader = new FileReader();
+              reader.readAsDataURL(audioBlob);
+        
+              reader.onloadend = async function() {
+                  const base64Audio = reader.result;
+            
+                  // Get user's language preference (default to English)
+                  const language = localStorage.getItem('userLanguage') || 'en';
+            
+                  // Send to backend
+                  const response = await fetch(`${baseUrl}/api/chat/transcribe_audio/`, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                          audio: base64Audio,
+                          language: language
+                      })
+                  });
+            
+                  const result = await response.json();
+           
+                  if (result.success && result.heard_input_query) {
+                      console.log('✅ Final Transcription:', result.heard_input_query);
+                      console.log(`📊 Confidence: ${result.confidence_score}%`);
+                
+                      // Display final transcribed text in input
+                      userInput.value = result.heard_input_query;
+                      userInput.style.color = '#ffffff';
+                
+                      // Show send button
+                      document.getElementById('sendButton').classList.add('active');
+                
+                      // Show a subtle success indicator
+                      userInput.style.borderColor = 'rgba(34, 197, 94, 0.5)';
+                      setTimeout(() => {
+                          userInput.style.borderColor = '';
+                      }, 1000);
+                
+                      // Automatically send the message
+                      await sendMessage();
+                
+                  } else {
+                      console.error('❌ Transcription failed:', result.error || result);
+                      userInput.value = '';
+                      userInput.style.color = '#ffffff';
+                      userInput.placeholder = '❌ Could not understand.  Try again? ';
+                
+                      // Show error in chat
+                      addToChatWindow('bot', '❌ Could not understand audio. Please try speaking more clearly.');
+                  }
+              };
+        
+          } catch (error) {
+              console.error('Transcription error:', error);
+              userInput.value = '';
+              userInput.style.color = '#ffffff';
+              userInput.placeholder = '❌ Error processing audio';
+              addToChatWindow('bot', '❌ Error processing audio. Please try again.');
+          }
+      }
+          
+          // Add CSS for recording animation
+          const recordingStyle = document.createElement('style');
+          recordingStyle.textContent = `
+              .mic-btn.recording {
+                background: #ff4444 !important;
+                animation: pulse 1.5s infinite;
+              }
+    
+              @keyframes pulse {
+                  0%, 100% {
+                      transform: scale(1);
+                      box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7);
+                  }
+                  50% {
+                      transform: scale(1.05);
+                      box-shadow: 0 0 0 10px rgba(255, 68, 68, 0);
+                  }
+              }
+          `;
+          document.head.appendChild(recordingStyle);
+
+
+      // ==========================================
+      // TEXT-TO-SPEECH (Audio Playback)
+      // ==========================================
+
+      async function playBotResponse(text, language = 'en') {
+          try {
+              console.log('🔊 Generating audio response...');
+        
+              const response = await fetch(`${baseUrl}/api/chat/synthesise_audio/`, {
+                  method: 'POST',
+                  headers:  {
+                      'Content-Type':  'application/json',
+                  },
+                  body: JSON.stringify({
+                      email_id: userMailId,
+                      text: text,
+                      language: language
+                  })
+              });
+        
+              const result = await response.json();
+        
+              if (result.success && result.audio) {
+                  // Convert base64 to audio blob
+                  const audioData = atob(result.audio);
+                  const arrayBuffer = new ArrayBuffer(audioData.length);
+                  const view = new Uint8Array(arrayBuffer);
+            
+                  for (let i = 0; i < audioData.length; i++) {
+                      view[i] = audioData.charCodeAt(i);
+                  }
+            
+                  const audioBlob = new Blob([arrayBuffer], { type: 'audio/mp3' });
+                  const audioUrl = URL.createObjectURL(audioBlob);
+            
+                  // Play audio
+                  const audio = new Audio(audioUrl);
+                  audio.play();
+            
+                  console.log('✅ Playing audio response');
+            
+              } else {
+                  console.error('❌ TTS failed:', result.error);
+              }
+        
+          } catch (error) {
+              console.error('TTS error:', error);
+          }
+      }
+
+      // Optional: Add speaker button to play responses
+      function addSpeakerButton(messageElement, text) {
+          const speakerBtn = document.createElement('button');
+          speakerBtn.className = 'speaker-button';
+          speakerBtn. innerHTML = '<i class="fas fa-volume-up"></i>';
+          speakerBtn.title = 'Listen to response';
+          speakerBtn. onclick = () => playBotResponse(text);
+    
+          messageElement.appendChild(speakerBtn);
+      }
+
 
       // Show/hide send button based on input
       const userInput = document.getElementById('userInput');

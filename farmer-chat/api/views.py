@@ -42,6 +42,7 @@ class ChatAPIViewSet(GenericViewSet):
     """
 
     authentication_classes = []
+    permission_classes = []
 
     @action(detail=False, methods=["post"])
     def get_answer_for_text_query(self, request):

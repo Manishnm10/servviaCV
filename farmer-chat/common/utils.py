@@ -20,7 +20,7 @@ from database.models import (
 )
 from django_core import celery
 from django_core.config import Config
-from language_service.translation import *
+from language_service.translation import a_translate_to  # ✅ ADD THIS
 from language_service.utils import get_language_by_code
 from peewee import DoesNotExist
 from requests import Request, Session
@@ -28,7 +28,6 @@ from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 
 logger = logging.getLogger(__name__)
-
 
 def send_request(
     url,

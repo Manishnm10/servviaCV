@@ -34,7 +34,7 @@ class LabReportAnalyzer:
         
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel('gemini-2.0-flash-exp')
-        logger.info("✅ Lab Report Analyzer initialized with Gemini 2.0 Flash")
+        logger.info("✅ Lab Report Analyzer initialized with ServVia AI")
     
     def extract_text_from_pdf(self, report_file):
         """
